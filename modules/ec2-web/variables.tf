@@ -14,4 +14,6 @@ variable "environment" {}
 
 variable "root_disk_size_gb" {}
 
+variable "user_data" {}
+
 #variable "iam_instance_profile_name" {}

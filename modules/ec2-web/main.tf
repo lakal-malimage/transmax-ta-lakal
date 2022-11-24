@@ -5,7 +5,7 @@ resource "aws_security_group" "web-server-sg" {
 
   ingress = [
     {
-      description      = "private_subnets_in"
+      description      = "http_in"
       from_port        = 80
       to_port          = 80
       protocol         = "tcp"
@@ -16,11 +16,22 @@ resource "aws_security_group" "web-server-sg" {
       self = false
     },
     {
-      description      = "private_subnets_in"
+      description      = "https_in"
       from_port        = 443
       to_port          = 443
       protocol         = "tcp"
       cidr_blocks      = ["0.0.0.0/0"]
+      ipv6_cidr_blocks = []
+      prefix_list_ids = []
+      security_groups = []
+      self = false
+    },
+    {
+      description      = "ssh_in"
+      from_port        = 22
+      to_port          = 22
+      protocol         = "tcp"
+      cidr_blocks      = ["0.0.0.0/0"]  ## Not a good security practice. Just for testing purposes only
       ipv6_cidr_blocks = []
       prefix_list_ids = []
       security_groups = []
@@ -66,6 +77,7 @@ module "ec2_instance" {
   instance_type          = var.instance_type
   key_name               = var.key_name
   associate_public_ip_address = true
+  user_data = var.user_data
   monitoring             = false
   vpc_security_group_ids = [aws_security_group.web-server-sg.id]
   subnet_id              = var.web_server_subnet_id
